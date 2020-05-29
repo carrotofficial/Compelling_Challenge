@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+			body {
+                margin: 0;
+            }
+			canvas {
+                display: block;
+            }
+        </style>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+        <script>
+            var keys;
+            $(document).ready(function(){
+                var scene = new THREE.Scene();
+                var camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+                var renderer = new THREE.WebGLRenderer();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                document.body.appendChild(renderer.domElement);
+
+                var cube_geo = new THREE.BoxGeometry();
+                var cube_mat = new THREE.MeshBasicMaterial({color: 0x0000ff});
+                var cube = new THREE.Mesh(cube_geo, cube_mat);
+                scene.add(cube);
+
+                camera.position.z = 10;
+
+                keys = {
+                    w: false,
+                    s: false,
+                    a: false,
+                    d: false,
+                    ArrowUp: false,
+                    ArrowDown: false,
+                    ArrowLeft: false,
+                    ArrowRight: false
+                };
+
+                document.onkeydown = function(e){
+                    if (e.key == "w"){
+                        keys.w = true;
+                    }
+                    if (e.key == "s"){
+                        keys.w = true;
+                    }
+                    if (e.key == "a"){
+                        keys.w = true;
+                    }
+                    if (e.key == "d"){
+                        keys.w = true;
+                    }
+                    if (e.key == "ArrowUp"){
+                        keys.ArrowUp = true;
+                    }
+                    if (e.key == "ArrowDown"){
+                        keys.ArrowDown = true;
+                    }
+                    if (e.key == "ArrowLeft"){
+                        keys.ArrowLeft = true;
+                    }
+                    if (e.key == "ArrowRight"){
+                        keys.ArrowRight = true;
+                    }
+                }
+                /*document.onkeyup = function(e){
+                    if (e.key == "w"){
+                        keys.w = false;
+                    }
+                    if (e.key == "ArrowUp"){
+                        keys.ArrowUp = false;
+                    }
+                    if (e.key == "ArrowDown"){
+                        keys.ArrowDown = false;
+                    }
+                    if (e.key == "ArrowLeft"){
+                        keys.ArrowLeft = false;
+                    }
+                    if (e.key == "ArrowRight"){
+                        camera.rotation.y -= 0.1
+                    }
+                }*/
+                
+                function animate() {
+                    // get the direction so we know where to move when the player uses the WASD keys
+                    var player_facing = camera.getWorldDirection();
+
+                    if (keys.w){
+                        camera.position.add(player_facing.multiplyScalar(0.1));
+                        keys.w = false;
+                    }
+                    if (keys.s){
+                        camera.position.add(-player_facing.multiplyScalar(0.1));
+                        keys.s = false;
+                    }
+                    /*if (keys.a){
+                        camera.position.add(player_facing.multiplyScalar(0.1));
+                        keys.a = false;
+                    }
+                    if (keys.d){
+                        camera.position.add(player_facing.multiplyScalar(0.1));
+                        keys.d = false;
+                    }*/
+                    if (keys.ArrowUp){
+                        //camera.rotation.x += 0.1;
+                        keys.ArrowUp = false;
+                    }
+                    if (keys.ArrowDown){
+                        //camera.rotation.x -= 0.1;
+                        keys.ArrowDown = false;
+                    }
+                    if (keys.ArrowLeft){
+                        camera.rotation.y += 0.1;
+                        keys.ArrowLeft = false;
+                    }
+                    if (keys.ArrowRight){
+                        camera.rotation.y -= 0.1;
+                        keys.ArrowRight = false;
+                    }
+
+	                requestAnimationFrame(animate);
+	                renderer.render(scene, camera);
+                }
+                animate();
+            });
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>
