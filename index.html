@@ -26,6 +26,12 @@
                 var cube = new THREE.Mesh(cube_geo, cube_mat);
                 scene.add(cube);
 
+                var bullet_geo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+                var bullet_mat = new THREE.MeshBasicMaterial({color: 0xff0000});
+                var bullet = new THREE.Mesh(bullet_geo, bullet_mat);
+                var bullet_collision;
+                scene.add(bullet);
+
                 camera.position.z = 10;
 
                 keys = {
@@ -44,13 +50,13 @@
                         keys.w = true;
                     }
                     if (e.key == "s"){
-                        keys.w = true;
+                        keys.s = true;
                     }
                     if (e.key == "a"){
-                        keys.w = true;
+                        keys.a = true;
                     }
                     if (e.key == "d"){
-                        keys.w = true;
+                        keys.d = true;
                     }
                     if (e.key == "ArrowUp"){
                         keys.ArrowUp = true;
@@ -65,6 +71,16 @@
                         keys.ArrowRight = true;
                     }
                 }
+
+                document.onclick = function(){
+                    bullet.position.x = camera.position.x;
+                    bullet.position.y = camera.position.y;
+                    bullet.position.z = camera.position.z;
+                    bullet_collision = false;
+                    setInterval(function(){
+                        bullet.position.add(camera.getWorldDirection().multiplyScalar(0.1));
+                    }, 100);
+                };
                 /*document.onkeyup = function(e){
                     if (e.key == "w"){
                         keys.w = false;
@@ -91,11 +107,12 @@
                         camera.position.add(player_facing.multiplyScalar(0.1));
                         keys.w = false;
                     }
-                    if (keys.s){
+                    /*if (keys.s){
+                        camera.rotation.x += 0.1
                         camera.position.add(-player_facing.multiplyScalar(0.1));
                         keys.s = false;
                     }
-                    /*if (keys.a){
+                    if (keys.a){
                         camera.position.add(player_facing.multiplyScalar(0.1));
                         keys.a = false;
                     }
