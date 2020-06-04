@@ -16,15 +16,16 @@
             $(document).ready(function(){
                 var scene = new THREE.Scene();
                 var camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
+                var player_facing;
 
                 var renderer = new THREE.WebGLRenderer();
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 document.body.appendChild(renderer.domElement);
 
-                var cube_geo = new THREE.BoxGeometry();
-                var cube_mat = new THREE.MeshBasicMaterial({color: 0x0000ff});
-                var cube = new THREE.Mesh(cube_geo, cube_mat);
-                scene.add(cube);
+                var floor_geo = new THREE.BoxGeometry(100, 0.1, 100);
+                var floor_mat = new THREE.MeshBasicMaterial({color: 0x000055});
+                var floor = new THREE.Mesh(floor_geo, floor_mat);
+                scene.add(floor);
 
                 var bullet_geo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
                 var bullet_mat = new THREE.MeshBasicMaterial({color: 0xff0000});
@@ -32,7 +33,7 @@
                 var bullet_collision;
                 scene.add(bullet);
 
-                camera.position.z = 10;
+                camera.position.y = 1;
 
                 keys = {
                     w: false,
@@ -43,26 +44,11 @@
                     ArrowDown: false,
                     ArrowLeft: false,
                     ArrowRight: false
-                };
+                }
 
                 document.onkeydown = function(e){
                     if (e.key == "w"){
                         keys.w = true;
-                    }
-                    if (e.key == "s"){
-                        keys.s = true;
-                    }
-                    if (e.key == "a"){
-                        keys.a = true;
-                    }
-                    if (e.key == "d"){
-                        keys.d = true;
-                    }
-                    if (e.key == "ArrowUp"){
-                        keys.ArrowUp = true;
-                    }
-                    if (e.key == "ArrowDown"){
-                        keys.ArrowDown = true;
                     }
                     if (e.key == "ArrowLeft"){
                         keys.ArrowLeft = true;
@@ -73,60 +59,24 @@
                 }
 
                 document.onclick = function(){
+                    // shoot when user clicks the mouse
                     bullet.position.x = camera.position.x;
                     bullet.position.y = camera.position.y;
                     bullet.position.z = camera.position.z;
                     bullet_collision = false;
+                    
                     setInterval(function(){
-                        bullet.position.add(camera.getWorldDirection().multiplyScalar(0.1));
+                        bullet.position.add(player_facing.multiplyScalar(0.1));
                     }, 100);
                 };
-                /*document.onkeyup = function(e){
-                    if (e.key == "w"){
-                        keys.w = false;
-                    }
-                    if (e.key == "ArrowUp"){
-                        keys.ArrowUp = false;
-                    }
-                    if (e.key == "ArrowDown"){
-                        keys.ArrowDown = false;
-                    }
-                    if (e.key == "ArrowLeft"){
-                        keys.ArrowLeft = false;
-                    }
-                    if (e.key == "ArrowRight"){
-                        camera.rotation.y -= 0.1
-                    }
-                }*/
                 
                 function animate() {
                     // get the direction so we know where to move when the player uses the WASD keys
-                    var player_facing = camera.getWorldDirection();
+                    player_facing = camera.getWorldDirection();
 
                     if (keys.w){
                         camera.position.add(player_facing.multiplyScalar(0.1));
                         keys.w = false;
-                    }
-                    /*if (keys.s){
-                        camera.rotation.x += 0.1
-                        camera.position.add(-player_facing.multiplyScalar(0.1));
-                        keys.s = false;
-                    }
-                    if (keys.a){
-                        camera.position.add(player_facing.multiplyScalar(0.1));
-                        keys.a = false;
-                    }
-                    if (keys.d){
-                        camera.position.add(player_facing.multiplyScalar(0.1));
-                        keys.d = false;
-                    }*/
-                    if (keys.ArrowUp){
-                        //camera.rotation.x += 0.1;
-                        keys.ArrowUp = false;
-                    }
-                    if (keys.ArrowDown){
-                        //camera.rotation.x -= 0.1;
-                        keys.ArrowDown = false;
                     }
                     if (keys.ArrowLeft){
                         camera.rotation.y += 0.1;
